@@ -5,6 +5,7 @@
 package classfile
 
 import "encoding/binary"
+
 /*
    Description: 读取class文件
 
@@ -20,7 +21,7 @@ func (self *ClassReader) readUint8() uint8 {
 	// 由于只是一个字节，直接读取即可，没有大端小端区别
 	// 每次从ClassReader结构体data中读取数据，然后将data去掉已被读取的数据
 	val := self.data[0]
-	self.data =self.data[1:]
+	self.data = self.data[1:]
 	return val
 }
 

@@ -78,7 +78,7 @@ func loadClass(className string, cp *classpath.Classpath) *classfile.ClassFile {
 	return cf
 }
 
-func printClassInfo(cf *classfile.ClassFile){
+func printClassInfo(cf *classfile.ClassFile) {
 	fmt.Printf("version: %v.%v\n", cf.MajorVersion(), cf.MinorVersion())
 	fmt.Printf("constants count: %v\n", len(cf.ConstantPool()))
 	fmt.Printf("access flags: 0x%x\n", cf.AccessFlags())

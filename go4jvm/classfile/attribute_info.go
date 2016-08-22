@@ -24,8 +24,7 @@ func readAttributes(reader *ClassReader, cp ConstantPool) []AttributeInfo {
 	return attributes
 }
 
-
-func readAttribute(reader *ClassReader, cp ConstantPool) AttributeInfo{
+func readAttribute(reader *ClassReader, cp ConstantPool) AttributeInfo {
 	attrNameIndex := reader.readUint16()
 	attrName := cp.getUtf8(attrNameIndex)
 	attrLen := reader.readUint32()
@@ -36,12 +35,19 @@ func readAttribute(reader *ClassReader, cp ConstantPool) AttributeInfo{
 
 func newAttributeInfo(attrName string, attrLen uint32, cp ConstantPool) AttributeInfo {
 	switch attrName {
-	case "Code" : return &CodeAttribute{cp : cp}
-	case "ConstantValue" : return &ConstantValueAttribute{}
-	case "Deprecated" : return &DeprecatedAttribute{}
-	case "Exceptions" : return &ExceptionsAttribute{}
-	case "LineNumberTable" : return &LineNumberTableAttribute{}
-	case "LocalVariableTable" : return &LocalVariableTableAttribute{}
-	default : return &UnpasedAttribute{attrName, attrLen, nil}
+	case "Code":
+		return &CodeAttribute{cp: cp}
+	case "ConstantValue":
+		return &ConstantValueAttribute{}
+	case "Deprecated":
+		return &DeprecatedAttribute{}
+	case "Exceptions":
+		return &ExceptionsAttribute{}
+	case "LineNumberTable":
+		return &LineNumberTableAttribute{}
+	case "LocalVariableTable":
+		return &LocalVariableTableAttribute{}
+	default:
+		return &UnpasedAttribute{attrName, attrLen, nil}
 	}
 }

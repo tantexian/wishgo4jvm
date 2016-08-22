@@ -16,7 +16,7 @@ type ConstantStringInfo struct {
 	stingIndex uint16
 }
 
-func (self *ConstantStringInfo) readInfo(reader *ClassReader){
+func (self *ConstantStringInfo) readInfo(reader *ClassReader) {
 	self.stingIndex = reader.readUint16()
 }
 
