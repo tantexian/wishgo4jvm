@@ -32,8 +32,8 @@ func main() {
 		printUsage()
 	} else {
 		// 启动java虚拟机
-		startJVM(cmd)
-		//startJVMAndPrint(cmd)
+		// startJVM(cmd)
+		startJVMAndPrint(cmd)
 	}
 }
 
@@ -43,7 +43,7 @@ func startJVM(cmd *Cmd) {
 	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
 	// 打印命令行参数
-	fmt.Printf("classpath：%v \nclass：%v \n\nargs：%v\n\n", cp.String(), cmd.class, cmd.args)
+	fmt.Printf("classpath：%v \nclass：%v \n\nargs：%v\n\n", cp, cmd.class, cmd.args)
 
 	//fmt.Println(cp.String())
 
@@ -64,7 +64,8 @@ func startJVMAndPrint(cmd *Cmd) {
 	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
 	// 打印命令行参数
-	fmt.Printf("classpath：%v class：%v args：%v\n", cp, cmd.class, cmd.args)
+	fmt.Printf("classpath：%v \nclass：%v \n\nargs：%v\n\n", cp, cmd.class, cmd.args)
+
 	// 将class的所有.符号替换为/的文件目录路径
 	className := strings.Replace(cmd.class, ".", "/", -1)
 
@@ -76,10 +77,12 @@ func startJVMAndPrint(cmd *Cmd) {
 func loadClass(className string, cp *classpath.Classpath) *classfile.ClassFile {
 	classData, _, err := cp.ReadClass(className)
 	if err != nil {
+		fmt.Print("cp.ReadClass err ==> ")
 		panic(err)
 	}
 	cf, err := classfile.Parse(classData)
 	if err != nil {
+		fmt.Print("classfile.Parse err ==> ")
 		panic(err)
 	}
 	return cf
