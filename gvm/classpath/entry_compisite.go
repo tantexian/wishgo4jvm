@@ -30,7 +30,8 @@ func newCompositeEntry(pathList string) CompositeEntry {
 func (self CompositeEntry) readClass(className string) ([]byte, Entry, error) {
 	for _, entry := range self {
 		data, from, err := entry.readClass(className)
-		if err != nil {
+		// 当err为空时，说明找到了（没有找到则会抛出一个errors.New）
+		if err == nil {
 			return data, from, err
 		}
 	}

@@ -1,1 +1,1 @@
-#wishjvm
+#wishgo4jvm

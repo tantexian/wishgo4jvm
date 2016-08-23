@@ -31,6 +31,7 @@ func newDirEntry(path string) *DirEntry {
 
 func (self *DirEntry) readClass(className string) ([]byte, Entry, error) {
 	fileName := filepath.Join(self.absDir, className)
+	// 直接从当前绝对路径中读取文件
 	data, err := ioutil.ReadFile(fileName)
 	return data, self, err
 }

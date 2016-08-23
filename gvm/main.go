@@ -7,8 +7,8 @@ package main
 import (
 	"fmt"
 	"strings"
-	"wishjvm/go4jvm/classfile"
-	"wishjvm/go4jvm/classpath"
+	"wishgo4jvm/gvm/classfile"
+	"wishgo4jvm/gvm/classpath"
 )
 
 /*
@@ -32,17 +32,21 @@ func main() {
 		printUsage()
 	} else {
 		// 启动java虚拟机
-		//startJVM(cmd)
-		startJVMAndPrint(cmd)
+		startJVM(cmd)
+		//startJVMAndPrint(cmd)
 	}
 }
 
-// Cmd 启动参数 eg：go4jvm -Xjre "C:\Program Files\Java\jdk1.7.0_55\jre" java.lang.Object
+// 此函数启动jvm，将对应的class加载到内存中
+// Cmd 启动参数 eg：gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.Object
 func startJVM(cmd *Cmd) {
 	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
 	// 打印命令行参数
-	fmt.Printf("classpath：%v class：%v args：%v\n", cp, cmd.class, cmd.args)
+	fmt.Printf("classpath：%v \nclass：%v \n\nargs：%v\n\n", cp.String(), cmd.class, cmd.args)
+
+	//fmt.Println(cp.String())
+
 	// 将class的所有.符号替换为/的文件目录路径
 	className := strings.Replace(cmd.class, ".", "/", -1)
 	classData, _, err := cp.ReadClass(className)
@@ -53,6 +57,9 @@ func startJVM(cmd *Cmd) {
 	fmt.Printf("class data：％v\n", classData)
 }
 
+// 此函数根据java虚拟机规范，解析对应的class文件，并打印出关键信息
+// 代码编译：go build wishgo4jvm\gvm
+// Cmd 启动参数 eg: gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.Object
 func startJVMAndPrint(cmd *Cmd) {
 	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)

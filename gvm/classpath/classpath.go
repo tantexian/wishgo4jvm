@@ -57,10 +57,13 @@ func (self *Classpath) parseUserClasspath(cpOption string) {
 
 func (self *Classpath) ReadClass(className string) ([]byte, Entry, error) {
 	className = className + ".class"
-	if data, entry, err := self.bootClasspath.readClass(className); err != nil {
+	// bootClasspath在parseBootAndExtClasspath方法中被赋值为self.bootClasspath = newWildcardEntry(jreLibPath)
+	// 即compositeEntry，因此调用compositeEntry的readClass方法
+	// 如果没有错误即err == nil 则说明找到class了
+	if data, entry, err := self.bootClasspath.readClass(className); err == nil {
 		return data, entry, err
 	}
-	if data, entry, err := self.extClasspath.readClass(className); err != nil {
+	if data, entry, err := self.extClasspath.readClass(className); err == nil {
 		return data, entry, err
 	}
 	return self.userClasspath.readClass(className)
@@ -92,4 +95,12 @@ func exists(path string) bool {
 		}
 	}
 	return true
+}
+
+func (self *Classpath) String() string {
+	str := "\n[self.bootClasspath ==> " + self.bootClasspath.String() +
+			"\nself.extClasspath ==> " + self.extClasspath.String() +
+			"\nself.userClasspath ==> " + self.userClasspath.String() +
+			"]\n"
+	return str
 }
