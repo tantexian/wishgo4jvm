@@ -64,22 +64,34 @@ func Parse(classData []byte) (classFile *ClassFile, err error) {
 			}
 		}
 	}()
+	// 赋值class内存byte数组数据到ClassReader结构体
 	cr := &ClassReader{classData}
 	classFile = &ClassFile{}
+	// 使用classFile中的read方法解析class的内存byte数据到ClassFile结构体中
 	classFile.read(cr)
 	return
 }
 
 func (self *ClassFile) read(reader *ClassReader) {
+	// 读取魔法数字即class的标识，验证是否为class文件
 	self.readAndCheckMagic(reader)
+	// 读取版本
 	self.readAndCheckVersion(reader)
+	// 读取常量池数据到ClassFile结构的constantpool变量中
 	self.constantPool = readConstantPool(reader)
+	// 读取权限访问标志
 	self.accessFlags = reader.readUint16()
+	// 获取当前类名信息
 	self.thisClass = reader.readUint16()
+	// 获取父类信息
 	self.superClass = reader.readUint16()
+	// 获取接口信息
 	self.interfaces = reader.readUint16s()
+	// 获取fields字段
 	self.fields = readMembers(reader, self.constantPool)
+	// 获取所有方法
 	self.methods = readMembers(reader, self.constantPool)
+	// 获取所有属性
 	self.attributes = readMembers(reader, self.constantPool)
 }
 

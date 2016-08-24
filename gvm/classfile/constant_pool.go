@@ -20,7 +20,7 @@ func readConstantPool(reader *ClassReader) ConstantPool {
 	constantPoolCount := int(reader.readUint16())
 	constantPool := make([]ConstantInfo, constantPoolCount)
 	for i := 1; i < constantPoolCount; i++ { // 索引从1开始
-		readConstantInfo(reader, constantPool)
+		constantPool[i] = readConstantInfo(reader, constantPool)
 		switch constantPool[i].(type) {
 		case *ConstantLongInfo, *ConstantDoubleInfo:
 			i++ //占两个位置

@@ -38,7 +38,7 @@ func main() {
 }
 
 // 此函数启动jvm，将对应的class加载到内存中
-// Cmd 启动参数 eg：gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.Object
+// Cmd 启动参数 eg：gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.String
 func startJVM(cmd *Cmd) {
 	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
@@ -59,7 +59,7 @@ func startJVM(cmd *Cmd) {
 
 // 此函数根据java虚拟机规范，解析对应的class文件，并打印出关键信息
 // 代码编译：go build wishgo4jvm\gvm
-// Cmd 启动参数 eg: gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.Object
+// Cmd 启动参数 eg: gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.String
 func startJVMAndPrint(cmd *Cmd) {
 	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
@@ -75,14 +75,16 @@ func startJVMAndPrint(cmd *Cmd) {
 }
 
 func loadClass(className string, cp *classpath.Classpath) *classfile.ClassFile {
+	// 根据className在jre中寻找对于的class文件，读取到内存中为classDate
 	classData, _, err := cp.ReadClass(className)
 	if err != nil {
-		fmt.Print("cp.ReadClass err ==> ")
+		fmt.Print("Classpath ReadClass err ==> ")
 		panic(err)
 	}
+	// 根据java虚拟机规范，解析classDate（class类的byte数组）
 	cf, err := classfile.Parse(classData)
 	if err != nil {
-		fmt.Print("classfile.Parse err ==> ")
+		fmt.Print("Java class file Parse err ==> ")
 		panic(err)
 	}
 	return cf
