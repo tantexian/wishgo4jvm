@@ -79,7 +79,7 @@ func (self *OperandStack) PushRef(ref *Object) {
 func (self *OperandStack) PopRef() *Object {
 	self.size--
 	ref := self.slots[self.size].ref
-	// 置为nil，使得go垃圾回收器回收该空间
+	// 置为nil，使得go垃圾回收器及时回收该空间
 	self.slots[self.size].ref = nil
 	return ref
 }
