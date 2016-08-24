@@ -32,3 +32,4 @@ _testmain.go
 .idea/modules.xml
 .idea/wishgo4jvm.iml
 .idea/workspace.xml
+/.idea/
