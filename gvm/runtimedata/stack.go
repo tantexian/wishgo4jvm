@@ -24,14 +24,26 @@ package runtimedata
     	否则，当前方法是本地方法，pc寄存器中的值没有明确定义。
 
     	更加形象的图片描述请参考本项目中：wishgo4jvm/resource/stackAndFrame.png
+    	或者博文：http://my.oschina.net/tantexian/blog/737610
 
     Author: tantexian
     Since: 2016/8/24
  */
 
-// 栈中包括了Frame及当前栈的maxSize
-// 用经典的链表（linked list）数据结构来实现Java虚拟机栈，
-// 这样栈就可以按需使用内存空间，而且弹出的帧也可以及时被Go的垃圾收集器回收。
+
+/*
+    Description: 结构：{JVM Stack [Frame][Frame][Frame]... }。
+		JVM Stack在每个线程被创建时被创建，用来存放一组栈帧（StackFrame/Frame）。
+		JVM Statck的大小可以是固定的，也可以是动态扩展的。如果线程需要一个比固定大小大的Stack，会发生StackOverflowError；
+		如果动态扩展Stack时没有足够的内存或者系统没有足够的内存为新线程创建Stack，发生OutOfMemoryError。
+
+		栈中包括了Frame及当前栈的maxSize
+		用经典的链表（linked list）数据结构来实现Java虚拟机栈，
+		这样栈就可以按需使用内存空间，而且弹出的帧也可以及时被Go的垃圾收集器回收。
+
+    Author: tantexian
+    Since:  2016/8/25
+ */
 type Stack struct {
 	maxSize uint // 保存栈的容量（最多可以容纳多少帧）
 	size uint  // 保存栈的当前大小

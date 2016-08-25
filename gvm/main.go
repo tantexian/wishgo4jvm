@@ -9,6 +9,7 @@ import (
 	"strings"
 	"wishgo4jvm/gvm/classfile"
 	"wishgo4jvm/gvm/classpath"
+	"wishgo4jvm/gvm/runtimedata"
 )
 
 /*
@@ -33,12 +34,18 @@ func main() {
 	} else {
 		// 启动java虚拟机
 		// startJVM(cmd)
-		startJVMAndPrint(cmd)
+		//startJVMAndPrint(cmd)
+		startJVMWithRuntimeDataArea(cmd)
 	}
 }
 
-// 此函数启动jvm，将对应的class加载到内存中
-// Cmd 启动参数 eg：gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.String
+/*
+    Description: 此函数启动jvm，将对应的class加载到内存中
+			Cmd 启动参数 eg：gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.String
+
+    Author: tantexian
+    Since:  2016/8/25
+*/
 func startJVM(cmd *Cmd) {
 	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
@@ -57,9 +64,14 @@ func startJVM(cmd *Cmd) {
 	fmt.Printf("class data：％v\n", classData)
 }
 
-// 此函数根据java虚拟机规范，解析对应的class文件，并打印出关键信息
-// 代码编译：go build wishgo4jvm\gvm
-// Cmd 启动参数 eg: gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.String
+/*
+    Description: 此函数根据java虚拟机规范，解析对应的class文件，并打印出关键信息
+		代码编译：go build wishgo4jvm\gvm
+		Cmd 启动参数 eg: gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.String
+
+    Author: tantexian
+    Since:  2016/8/25
+*/
 func startJVMAndPrint(cmd *Cmd) {
 	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
@@ -105,4 +117,62 @@ func printClassInfo(cf *classfile.ClassFile) {
 	for _, m := range cf.Methods() {
 		fmt.Printf("  %s\n", m.Name())
 	}
+}
+
+/*
+    Description: 此函数根据java虚拟机规范，模拟runtime data area 的栈及栈帧相关使用
+		代码编译：go build wishgo4jvm\gvm
+		Cmd 启动参数 eg: gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" java.lang.String
+
+    Author: tantexian
+    Since:  2016/8/25
+*/
+func startJVMWithRuntimeDataArea(cmd *Cmd) {
+	frame := runtimedata.NewFrame(100, 100)
+	println("Test LocalVars set and get methods:")
+	tesLocalVars(frame.LocalVars())
+	println("\nTest OperandStack push and pop methods:")
+	testOperandStack(frame.OperandStack())
+}
+
+func tesLocalVars(localvals runtimedata.LocalVars) {
+	// int 、float占据一个索引位置
+	localvals.SetInt(0, 99)
+	localvals.SetInt(1, -99)
+	localvals.SetFloat(2, 3.1415926)
+	// long、double各占据两个索引位置
+	localvals.SetLong(3, 1234)
+	localvals.SetLong(5, -214748364)
+	localvals.SetDouble(7, -3.14159265358979)
+	obj := &runtimedata.Object{
+		Name: "ttx",
+	}
+	localvals.SetRef(8, obj)
+
+	println(localvals.GetInt(0))
+	println(localvals.GetInt(1))
+	println(localvals.GetFloat(2))
+	println(localvals.GetLong(3))
+	println(localvals.GetLong(5))
+	println(localvals.GetDouble(7))
+	println(localvals.GetRef(8).Name)
+
+}
+
+func testOperandStack(operandStack *runtimedata.OperandStack) {
+	operandStack.PushInt(100)
+	operandStack.PushInt(-100)
+	operandStack.PushFloat(3.14159)
+	operandStack.PushDouble(3.1415926535)
+	obj := &runtimedata.Object{
+		Name: "ttx",
+	}
+	operandStack.PushRef(obj)
+
+	// 依次逆序反着对应类型出栈
+	println(operandStack.PopRef().Name)
+	println(operandStack.PopDouble())
+	println(operandStack.PopFloat())
+	println(operandStack.PopInt())
+	println(operandStack.PopInt())
 }

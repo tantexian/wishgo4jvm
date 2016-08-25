@@ -11,5 +11,5 @@ package runtimedata
  */
 
 type Object struct {
-
+	Name string
 }

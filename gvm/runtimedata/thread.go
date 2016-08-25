@@ -19,7 +19,7 @@ type Thread struct {
 
 // 如果Java虚拟机栈有大小限制，且执行线程所需的栈空间超出了这个限制，
 // 会导致StackOverflowError异常抛出。
-// 如果Java虚拟机栈可以动态扩展，但是内存已经耗尽，会导致OutOfMemor
+// 如果Java虚拟机栈可以动态扩展，但是内存已经耗尽，会导致OutOfMemory
 func NewThread() *Thread {
 	return &Thread{
 		stack: newStack(1024),

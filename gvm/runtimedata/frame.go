@@ -10,6 +10,15 @@ package runtimedata
     Since: 2016/8/24
  */
 
+/*
+    Description: 结构：{Frame [ReturnValue] [LocalVariables[][][][]...] [OperandStack [][][]...] [ConstPoolRef] }
+		每次方法调用均会创建一个对应的Frame，方法执行完毕或者异常终止，Frame被销毁。
+		一个方法A调用另一个方法B时，A的frame停止，新的frame被创建赋予B，
+		执行完毕后，把计算结果传递给A，A继续执行。
+
+    Author: tantexian
+    Since:  2016/8/25
+ */
 type Frame struct {
 	next *Frame // 用来实现链表数据结构
 	localVars LocalVars // 保存局部变量表指针
@@ -21,4 +30,12 @@ func NewFrame(maxLocals, maxStack uint) *Frame {
 		localVars: newLocalVars(maxLocals),
 		operandStack: newOperandStack(maxStack),
 	}
+}
+
+// getters
+func (self *Frame) LocalVars() LocalVars {
+	return self.localVars
+}
+func (self *Frame) OperandStack() *OperandStack {
+	return self.operandStack
 }

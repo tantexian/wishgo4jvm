@@ -7,12 +7,21 @@ package runtimedata
 import "math"
 
 /*
-   Description:
+   Description: OperandStack操作数栈
 
    Author: tantexian
    Since: 2016/8/24
 */
 
+/*
+    Description: Frame被创建时，操作栈是空的。操作栈的每个项可以存放JVM的各种类型数据，包括long/double。
+			操作栈有个栈深，long/double贡献两个栈深。
+			操作栈调用其它有返回结果的方法时，会把结果push到栈上。
+			更多详情请参考博文：http://my.oschina.net/tantexian/blog/737697
+
+    Author: tantexian
+    Since:  2016/8/25
+ */
 type OperandStack struct {
 	size  uint // 记录栈顶位置
 	slots []Slot
