@@ -21,7 +21,7 @@ import "math"
 
     Author: tantexian
     Since:  2016/8/25
- */
+*/
 type OperandStack struct {
 	size  uint // 记录栈顶位置
 	slots []Slot
@@ -91,4 +91,15 @@ func (self *OperandStack) PopRef() *Object {
 	// 置为nil，使得go垃圾回收器及时回收该空间
 	self.slots[self.size].ref = nil
 	return ref
+}
+
+// 栈指令直接对操作数栈进行操作
+func (self *OperandStack) PushSlot(slot Slot) {
+	self.slots[self.size] = slot
+	self.size++
+}
+
+func (self *OperandStack) PopSlot() Slot {
+	self.size--
+	return self.slots[self.size]
 }
