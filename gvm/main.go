@@ -128,7 +128,7 @@ func printClassInfo(cf *classfile.ClassFile) {
     Since:  2016/8/25
 */
 func startJVMWithRuntimeDataArea(cmd *Cmd) {
-	frame := runtimedata.NewFrame(100, 100)
+	frame := runtimedata.NewFrameNoThread(100, 100)
 	println("Test LocalVars set and get methods:")
 	tesLocalVars(frame.LocalVars())
 	println("\nTest OperandStack push and pop methods:")

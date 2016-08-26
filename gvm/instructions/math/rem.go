@@ -11,11 +11,31 @@ import (
 )
 
 /*
-   Description:
+   Description: 求余（rem）指令
 
    Author: tantexian
    Since: 2016/8/26
 */
+
+/*
+   Description: 先从操作数栈中弹出两个int值，然后再将两个值取余，再将结果push到操作数栈中
+
+   Author: tantexian
+   Since:  2016/8/26
+*/
+type IREM struct{ base.NoOperandsInstruction }
+
+func (self *IREM) Execute(frame *runtimedata.Frame) {
+	stack := frame.OperandStack()
+	v2 := stack.PopInt()
+	v1 := stack.PopInt()
+	if v2 == 0 {
+		panic("java.lang.ArithmeticException: / by zero")
+	}
+
+	result := v1 % v2
+	stack.PushInt(result)
+}
 
 // Remainder double
 type DREM struct{ base.NoOperandsInstruction }
@@ -37,21 +57,6 @@ func (self *FREM) Execute(frame *runtimedata.Frame) {
 	v1 := stack.PopFloat()
 	result := float32(math.Mod(float64(v1), float64(v2))) // todo
 	stack.PushFloat(result)
-}
-
-// Remainder int
-type IREM struct{ base.NoOperandsInstruction }
-
-func (self *IREM) Execute(frame *runtimedata.Frame) {
-	stack := frame.OperandStack()
-	v2 := stack.PopInt()
-	v1 := stack.PopInt()
-	if v2 == 0 {
-		panic("java.lang.ArithmeticException: / by zero")
-	}
-
-	result := v1 % v2
-	stack.PushInt(result)
 }
 
 // Remainder long

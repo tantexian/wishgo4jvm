@@ -5,8 +5,8 @@
 package constants
 
 import (
-	"runtime"
 	"wishgo4jvm/gvm/instructions/base"
+	"wishgo4jvm/gvm/runtimedata"
 )
 
 /*
@@ -21,6 +21,6 @@ type NOP struct {
 	base.NoOperandsInstruction
 }
 
-func (self *NOP) Excute(frame runtime.Frame) {
+func (self *NOP) Execute(frame *runtimedata.Frame) {
 	// 空操作符，什么也不做
 }

@@ -13,7 +13,7 @@ package runtimedata
 
 // 若java虚拟机栈大小有限制，
 type Thread struct {
-	pc    int // 程序技术器，指向下一条需要执行的代码
+	pc    int    // 程序技术器，指向下一条需要执行的代码
 	stack *Stack // Stack（Java虚拟机栈)指针。
 }
 
@@ -26,15 +26,27 @@ func NewThread() *Thread {
 	}
 }
 
+func (self *Thread) PC() int {
+	return self.pc
+}
+
+func (self *Thread) SetPC(pc int) {
+	self.pc = pc
+}
+
 // 直接调用stack相应的方法
 func (self *Thread) PushFrame(frame *Frame) {
 	self.stack.push(frame)
 }
 
-func (self *Thread) PopFrame(frame *Frame) {
-	self.stack.pop()
+func (self *Thread) PopFrame() *Frame {
+	return self.stack.pop()
 }
 
 func (self *Thread) CurrentFrame() *Frame {
 	return self.stack.top()
+}
+
+func (self *Thread) NewFrame(maxLocals, maxStack uint) *Frame {
+	return newFrame(self, maxLocals, maxStack)
 }

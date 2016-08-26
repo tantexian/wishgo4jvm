@@ -4,7 +4,9 @@
 */
 package base
 
-import "runtime"
+import (
+	"wishgo4jvm/gvm/runtimedata"
+)
 
 /*
    Description:
@@ -16,7 +18,7 @@ type Instruction interface {
 	// 从字节码中提取操作数
 	FetchOperands(reader *BytecodeReader)
 	// 执行指令逻辑
-	Execute(frame *runtime.Frame)
+	Execute(frame *runtimedata.Frame)
 }
 
 type NoOperandsInstruction struct {
@@ -32,7 +34,7 @@ type BranchInstruction struct {
 }
 
 func (self *BranchInstruction) FetchOperands(reader *BytecodeReader) {
-	self.Offset = reader.ReadInt16()
+	self.Offset = int(reader.ReadInt16())
 }
 
 /*
