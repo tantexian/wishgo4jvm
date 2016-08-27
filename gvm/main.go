@@ -32,10 +32,17 @@ func main() {
 		// 如果有-help参数或者没有指定具体的class则打印使用帮助
 		printUsage()
 	} else {
-		// 启动java虚拟机
+		// 启动java虚拟机，将对应的class加载到内存中
 		// startJVM(cmd)
+
+		// 启动JVM并解析class文件，打印class对于信息
 		//startJVMAndPrint(cmd)
-		startJVMWithRuntimeDataArea(cmd)
+
+		// 启动JVM，模拟操作数栈
+		//startJVMWithRuntimeDataArea(cmd)
+
+		// 启动JVM，解析class文件为对应指令集
+		startJVMWithInstructions(cmd)
 	}
 }
 
@@ -175,4 +182,35 @@ func testOperandStack(operandStack *runtimedata.OperandStack) {
 	println(operandStack.PopFloat())
 	println(operandStack.PopInt())
 	println(operandStack.PopInt())
+}
+
+/*
+    Description: 此函数根据java虚拟机规范，加入java指令集Instructions解析功能
+		代码编译：go build wishgo4jvm\gvm
+		Cmd 启动参数 eg: gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" -cp "./resource" com.hello.HelloWord
+		注：在HelloWord.class在路径./resource/com/hello目录下
+
+    Author: tantexian
+    Since:  2016/8/25
+*/
+func startJVMWithInstructions(cmd *Cmd) {
+	// 解析所有classpath变量，其中cp为Classpath结构体，保存了bootClasspath、extClasspath、userClasspath路径信息
+	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
+	className := strings.Replace(cmd.class, ".", "/", -1)
+	classFile := loadClass(className, cp)
+	mainMethod := getMainMethod(classFile)
+	if mainMethod != nil {
+		interpret(mainMethod)
+	} else {
+		fmt.Printf("Main method not found in class ％s\n", cmd.class)
+	}
+}
+
+func getMainMethod(cf *classfile.ClassFile) *classfile.MemberInfo {
+	for _, m := range cf.Methods() {
+		if m.Name() == "main" && m.Descriptor() == "([Ljava/lang/String;)V" {
+			return m
+		}
+	}
+	return nil
 }

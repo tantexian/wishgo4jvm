@@ -46,7 +46,7 @@ type ClassFile struct {
 	interfaces   []uint16
 	fields       []*MemberInfo
 	methods      []*MemberInfo
-	attributes   []*MemberInfo
+	attributes   []AttributeInfo
 }
 
 // 将byte数组数据解析成ClassFile结构体数据
@@ -92,7 +92,7 @@ func (self *ClassFile) read(reader *ClassReader) {
 	// 获取所有方法
 	self.methods = readMembers(reader, self.constantPool)
 	// 获取所有属性
-	self.attributes = readMembers(reader, self.constantPool)
+	self.attributes = readAttributes(reader, self.constantPool)
 }
 
 // 获取class文件的magic number
