@@ -188,7 +188,8 @@ func testOperandStack(operandStack *runtimedata.OperandStack) {
     Description: 此函数根据java虚拟机规范，加入java指令集Instructions解析功能
 		代码编译：go build wishgo4jvm\gvm
 		Cmd 启动参数 eg: gvm.exe -Xjre "C:\Program Files\Java\jdk1.8.0_92\jre" -cp "./resource" com.hello.HelloWord
-		注：在HelloWord.class在路径./resource/com/hello目录下
+		注：1、使用javac将resource目录下的HelloWord.java编程成class文件
+		    2、将1中编译得到的HelloWord.class文件放置到路径./resource/com/hello目录下
 
     Author: tantexian
     Since:  2016/8/25

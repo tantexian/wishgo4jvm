@@ -13,7 +13,7 @@ package runtimedata
 
 // 若java虚拟机栈大小有限制，
 type Thread struct {
-	pc    int    // 程序技术器，指向下一条需要执行的代码
+	pc    int    // 程序计数器，指向下一条需要执行的代码
 	stack *Stack // Stack（Java虚拟机栈)指针。
 }
 
